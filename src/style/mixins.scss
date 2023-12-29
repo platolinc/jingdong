@@ -1,0 +1,6 @@
+@mixin ellipsis {
+  white-space: nowrap;   //强制不换行
+
+  overflow: hidden;
+  text-overflow: ellipsis;   //超出部分显示省略号   
+}
