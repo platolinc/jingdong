@@ -7,25 +7,24 @@
     <div class="wrapper__input">
       <input class="wrapper__input__content" placeholder="请输入密码" type="password"/>
     </div>
-    <div class="wrapper__login-button" @click="handleLogin">登录</div>
-    <div class="wrapper__signup" @click="handleRegisterClick">立即注册</div>
+    <div class="wrapper__input">
+      <input class="wrapper__input__content" placeholder="确认密码" type="password"/>
+    </div>
+    <div class="wrapper__register-button">注册</div>
+    <div class="wrapper__signup" @click="handleLoginClick">已有账号去登陆</div>
   </div>
 </template>
 
 <script>
 import { useRouter } from 'vue-router'
 export default {
-  name: 'LoginView',
+  name: 'RegisterView',
   setup () {
     const router = useRouter() // 通过这个方法获得router的实例
-    const handleLogin = () => {
-      localStorage.isLogin = true
-      router.push({ name: 'HomeView' }) // 通过路由实例的push方法跳转页面，此处意思是已经登陆到HomeView界面则不允许回到登陆界面
+    const handleLoginClick = () => {
+      router.push({ name: 'LoginView' })
     }
-    const handleRegisterClick = () => {
-      router.push({ name: 'RegisterView' })
-    }
-    return { handleLogin, handleRegisterClick }
+    return { handleLoginClick }
   }
 }
 </script>
@@ -64,7 +63,7 @@ export default {
       }
     }
   }
-  &__login-button {
+  &__register-button {
     margin: .32rem .4rem .16rem .4rem;
     line-height: .48rem;
     background: #0091FF;

@@ -1,11 +1,25 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '../views/home/HomeView'
 import LoginView from '../views/login/LoginView'
+import RegisterView from '../views/register/RegisterView'
 const routes = [
   {
     path: '/',
     name: 'HomeView',
     component: HomeView
+  },
+  {
+    path: '/register',
+    name: 'RegisterView',
+    component: RegisterView,
+    beforeEnter (to, from, next) { // 每一个路由都可以加这个函数，在进入到此路由之前被执行
+      const isLogin = localStorage.isLogin
+      if (isLogin) {
+        next({ name: 'HomeView' })
+      } else {
+        next()
+      }
+    }
   },
   {
     path: '/login',
@@ -36,8 +50,10 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => { // 每次做路由跳转之前都会执行router的这个方法
-  const isLogin = localStorage.isLogin
-  if (isLogin || to.name === 'LoginView') {
+  const { isLogin } = localStorage
+  const { name } = to
+  const isLoginOrRegister = (name === 'LoginView' || name === 'RegisterView')
+  if (isLogin || isLoginOrRegister) {
     next()
   } else {
     next({ name: 'LoginView' })
