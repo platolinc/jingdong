@@ -9,6 +9,7 @@
     </div>
     <div class="wrapper__login-button" @click="handleLogin">登录</div>
     <div class="wrapper__signup" @click="handleRegisterClick">立即注册</div>
+    <Toast v-if="data.showToast" :message="data.toastMessage" />
   </div>
 </template>
 
@@ -16,18 +17,32 @@
 import { useRouter } from 'vue-router'
 import { post } from '../../utils/request'
 import { reactive } from 'vue'
+import Toast from '../../components/ToastView'
 
 export default {
   name: 'LoginView',
+  components: { Toast },
   setup () {
     const data = reactive({
       username: '',
-      password: ''
+      password: '',
+      showToast: false,
+      toastMessage: ''
     })
     const router = useRouter() // 通过这个方法获得router的实例
+
+    const showToast = (message) => {
+      data.showToast = true
+      data.toastMessage = message
+      setTimeout(() => {
+        data.showToast = false
+        data.toastMessage = ''
+      }, 2000)
+    }
+
     const handleLogin = async () => {
       try {
-        const result = await post('/api/user/login', {
+        const result = await post('/api故意错/user/login', {
           username: data.username,
           password: data.password
         })
@@ -35,10 +50,10 @@ export default {
           localStorage.isLogin = true
           router.push({ name: 'HomeView' }) // 通过路由实例的push方法跳转页面
         } else {
-          alert('登录失败')
+          showToast('登陆失败')
         }
       } catch (e) {
-        alert('请求失败')
+        showToast('请求失败')
       }
     }
     const handleRegisterClick = () => {
