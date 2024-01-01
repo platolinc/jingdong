@@ -19,12 +19,18 @@ import { useRouter } from 'vue-router'
 import { post } from '../../utils/request'
 import Toast, { useToastEffect } from '../../components/ToastView'
 
+// 处理登录相关逻辑
 const useLoginEffect = (showToast) => {
   const router = useRouter() // 通过这个方法获得router的实例
   const data = reactive({ username: '', password: '' })
 
   const handleLogin = async () => {
     try {
+      const { username, password } = data
+      if (username === '' || password === '') {
+        showToast('登陆失败')
+        return
+      }
       const result = await post('/api/user/login', {
         username: data.username,
         password: data.password
@@ -43,6 +49,7 @@ const useLoginEffect = (showToast) => {
   return { username, password, handleLogin }
 }
 
+// 处理跳转到注册页面
 const useRegisterEffect = () => {
   const router = useRouter() // 通过这个方法获得router的实例
   const handleRegisterClick = () => {
