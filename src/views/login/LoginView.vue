@@ -27,7 +27,7 @@ const useLoginEffect = (showToast) => {
   const handleLogin = async () => {
     try {
       const { username, password } = data
-      if (username === '' || password === '') {
+      if (username !== 'lch' || password !== '666') {
         showToast('登陆失败')
         return
       }
