@@ -1,7 +1,12 @@
 <template>
   <div class="nearby">
     <h3 class="nearby__title">附近店铺</h3>
-    <div
+    <ShopInfo
+      v-for="item in nearbyList"
+      :key="item._id"
+      :item="item"
+    />
+    <!-- <div
       class="nearby__item"
       v-for="item in nearbyList"
       :key="item._id"
@@ -16,14 +21,14 @@
         </div>
         <p class="nearby__content__highlight">{{ item.slogan }}</p>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
 import { ref } from 'vue'
 import { get } from '../../utils/request'
-
+import ShopInfo from '../../components/ShopInfo'
 const useNearbyListEffect = () => {
   const nearbyList = ref([])
   const getNearbyList = async () => {
@@ -37,6 +42,7 @@ const useNearbyListEffect = () => {
 
 export default {
   name: 'NearBy',
+  components: { ShopInfo },
   setup () {
     const { nearbyList, getNearbyList } = useNearbyListEffect()
     getNearbyList()
@@ -53,40 +59,6 @@ export default {
     font-size:.18rem;
     font-weight:normal;
     color:$content-fontcolor;
-  }
-  &__item{
-    display:flex;
-    padding-top: .12rem;
-    &__img{
-      margin-right: .16rem;
-      width: .56rem;
-      height: .56rem;
-    }
-  }
-  &__content{
-    flex:1;
-    padding-bottom: .12rem;
-    border-bottom: .01rem solid $content-bgColor;
-    &__title{
-      line-height: .22rem;
-      font-size: .16rem;
-      color:$content-fontcolor;
-    }
-    &__tags{
-      margin-top: .08rem;
-      line-height: .18rem;
-      font-size: .13rem;
-      color:$content-fontcolor;
-    }
-    &__tag{
-      margin-right: .16rem;
-    }
-    &__highlight{
-      line-height: .18rem;
-      font-size: .13rem;
-      color: #E93B3B;
-      margin: .08rem 0 0 0;
-    }
   }
 }
 </style>

@@ -1,17 +1,20 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import HomeView from '../views/home/HomeView'
-import LoginView from '../views/login/LoginView'
-import RegisterView from '../views/register/RegisterView'
+
 const routes = [
   {
     path: '/',
     name: 'HomeView',
-    component: HomeView
+    component: () => import(/* webpackChunkName: "home" */ '../views/home/HomeView')
+  },
+  {
+    path: '/shop',
+    name: 'ShopView',
+    component: () => import(/* webpackChunkName: "shop" */ '../views/shop/ShopView')
   },
   {
     path: '/register',
     name: 'RegisterView',
-    component: RegisterView,
+    component: () => import(/* webpackChunkName: "reister" */ '../views/register/RegisterView'),
     beforeEnter (to, from, next) { // 每一个路由都可以加这个函数，在进入到此路由之前被执行
       const isLogin = localStorage.isLogin
       if (isLogin) {
@@ -24,7 +27,7 @@ const routes = [
   {
     path: '/login',
     name: 'LoginView',
-    component: LoginView,
+    component: () => import(/* webpackChunkName: "login" */ '../views/login/LoginView'),
     beforeEnter (to, from, next) { // 每一个路由都可以加这个函数，在进入到此路由之前被执行
       const isLogin = localStorage.isLogin
       if (isLogin) {
