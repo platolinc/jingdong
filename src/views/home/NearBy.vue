@@ -1,27 +1,10 @@
 <template>
   <div class="nearby">
     <h3 class="nearby__title">附近店铺</h3>
-    <ShopInfo
-      v-for="item in nearbyList"
-      :key="item._id"
-      :item="item"
-    />
-    <!-- <div
-      class="nearby__item"
-      v-for="item in nearbyList"
-      :key="item._id"
-    >
-      <img :src="item.imgUrl" class="nearby__item__img" />
-      <div class="nearby__content">
-        <div class="nearby__content__title">{{item.name}}</div>
-        <div class="nearby__content__tags">
-          <span class="nearby__content__tag">月售：{{ item.sales }}</span>
-          <span class="nearby__content__tag">起送：{{ item.expressLimit }}</span>
-          <span class="nearby__content__tag">基础运费：{{ item.expressPrice }}</span>
-        </div>
-        <p class="nearby__content__highlight">{{ item.slogan }}</p>
-      </div>
-    </div> -->
+    <!-- 最外层有router-link那么循环相关的v-for key都必须写到最外层 -->
+    <router-link to="/shop" v-for="item in nearbyList" :key="item._id">
+      <ShopInfo :item="item" />
+    </router-link>
   </div>
 </template>
 
@@ -59,6 +42,9 @@ export default {
     font-size:.18rem;
     font-weight:normal;
     color:$content-fontcolor;
+  }
+  a {
+    text-decoration: none; //如果包了一个<router-link>，就会在最外层加一个<a>标签，出现下划线。此行解决该问题
   }
 }
 </style>
