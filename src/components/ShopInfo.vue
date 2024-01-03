@@ -62,7 +62,7 @@ export default {
     &__highlight {
       line-height: .18rem;
       font-size: .13rem;
-      color: #E93B3B;
+      color: $highlight-fontcolor;
       margin: .08rem 0 0 0;
     }
   }
