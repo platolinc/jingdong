@@ -15,6 +15,7 @@
       :hideBorder="true"
       v-show="item.imgUrl"
     />
+    <ContentView />
   </div>
 </template>
 
@@ -23,7 +24,7 @@ import { reactive, toRefs } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { get } from '../../utils/request'
 import ShopInfo from '../../components/ShopInfo'
-
+import ContentView from './ContentView.vue'
 // 获取当前商铺信息
 const useShopInfoEffect = () => {
   const route = useRoute()
@@ -49,7 +50,7 @@ const useBackRouterEffect = () => {
 
 export default {
   name: 'ShopView',
-  components: { ShopInfo },
+  components: { ShopInfo, ContentView },
   setup () {
     const { item, getItemData } = useShopInfoEffect()
     const handleBackClick = useBackRouterEffect()
