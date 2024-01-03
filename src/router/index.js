@@ -7,14 +7,14 @@ const routes = [
     component: () => import(/* webpackChunkName: "home" */ '../views/home/HomeView')
   },
   {
-    path: '/shop',
+    path: '/shop/:id',
     name: 'ShopView',
     component: () => import(/* webpackChunkName: "shop" */ '../views/shop/ShopView')
   },
   {
     path: '/register',
     name: 'RegisterView',
-    component: () => import(/* webpackChunkName: "reister" */ '../views/register/RegisterView'),
+    component: () => import(/* webpackChunkName: "register" */ '../views/register/RegisterView'),
     beforeEnter (to, from, next) { // 每一个路由都可以加这个函数，在进入到此路由之前被执行
       const isLogin = localStorage.isLogin
       if (isLogin) {

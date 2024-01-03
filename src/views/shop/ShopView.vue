@@ -13,41 +13,59 @@
     <ShopInfo
       :item="item"
       :hideBorder="true"
+      v-show="item.imgUrl"
     />
   </div>
 </template>
 
 <script>
-import { useRouter } from 'vue-router'
+import { reactive, toRefs } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { get } from '../../utils/request'
 import ShopInfo from '../../components/ShopInfo'
+
+// 获取当前商铺信息
+const useShopInfoEffect = () => {
+  const route = useRoute()
+  const data = reactive({ item: {} })
+  const getItemData = async () => {
+    const result = await get(`/api/shop/${route.params.id}`)
+    if (result?.errno === 0 && result?.data) {
+      data.item = result.data
+    }
+  }
+  const { item } = toRefs(data)
+  return { item, getItemData }
+}
+
+// 点击回退的逻辑
+const useBackRouterEffect = () => {
+  const router = useRouter()
+  const handleBackClick = () => {
+    router.back()
+  }
+  return handleBackClick
+}
+
 export default {
   name: 'ShopView',
   components: { ShopInfo },
   setup () {
-    const router = useRouter()
-    const item = {
-      _id: '1',
-      name: '沃尔玛',
-      imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
-      sales: 10000,
-      expressLimit: 0,
-      expressPrice: 5,
-      slogan: 'VIP尊享满89元减4元运费券'
-    }
-    const handleBackClick = () => {
-      router.back()
-    }
+    const { item, getItemData } = useShopInfoEffect()
+    const handleBackClick = useBackRouterEffect()
+    getItemData()
     return { item, handleBackClick }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@import '../../style/variables.scss';
 .wrapper {
   padding: 0 .18rem;
 }
 .search {
-  margin: .2rem 0 .16rem 0;
+  margin: .14rem 0 .04rem 0;
   line-height: .32rem;
   display: flex;
   &__back {
@@ -59,12 +77,12 @@ export default {
     display: flex;
     flex: 1;
     border-radius: .16rem;
-    background: #F5F5F5;
+    background: $search-bgColor;
     &__icon {
       font-size: .20rem;
       width: .44rem;
       text-align: center;
-      color: #B7B7B7;
+      color: $search-fontColor;
     }
     &__input {
       padding-right:.2rem;
@@ -74,9 +92,9 @@ export default {
       background: none;
       height: .32rem;
       font-size: .14rem;
-      color: #333;
+      color: $content-fontcolor;
       &::placeholder {
-        color: #333;
+        color: $content-fontcolor;
       }
     }
   }
