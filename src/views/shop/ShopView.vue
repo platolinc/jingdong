@@ -15,7 +15,7 @@
       :hideBorder="true"
       v-show="item.imgUrl"
     />
-    <ContentView />
+    <ContentView :shopName="item.name"/>
     <CartView />
   </div>
 </template>
