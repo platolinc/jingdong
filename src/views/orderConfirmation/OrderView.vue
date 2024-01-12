@@ -1,10 +1,10 @@
 <template>
   <div class="order">
     <div class="order__price">实付金额 <b>￥{{ calculations.price }}</b></div>
-    <div class="order__btn">提交订单</div>
+    <div class="order__btn" @click="() => handleSubmitClick(true)">提交订单</div>
   </div>
-  <div class="mask">
-    <div class="mask__content">
+  <div class="mask" v-show="showConfirm" @click="() => handleSubmitClick(false)">
+    <div class="mask__content" @click.stop>
       <h3 class="mask__content__title">确认离开收银台？</h3>
       <p class="mask__content__desc">请尽快完成支付，否则将被取消</p>
       <div class="mask__content__btns">
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { useCommonCartEffect } from '../../effects/cartEffects'
@@ -33,9 +34,14 @@ export default {
     const route = useRoute()
     const router = useRouter()
     const store = useStore()
+
+    const showConfirm = ref(false)
+
     const shopId = parseInt(route.params.id, 10)
     const { calculations, shopName, productList } = useCommonCartEffect(shopId)
-
+    const handleSubmitClick = (states) => {
+      showConfirm.value = states
+    }
     const handleConfirmOrder = async (isCanceled) => {
       const products = []
       for (const i in productList.value) {
@@ -60,7 +66,7 @@ export default {
         // 提示失败
       }
     }
-    return { calculations, handleConfirmOrder }
+    return { showConfirm, calculations, handleConfirmOrder, handleSubmitClick }
   }
 }
 </script>
