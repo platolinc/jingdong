@@ -15,32 +15,68 @@
         <div class="top__receiver__icon iconfont">&#xe6db;</div>
       </div>
     </div>
+    <div class="products">
+      <div class="products__title">
+        {{ shopName }}
+      </div>
+      <div class="products__list">
+        <div
+          class="products__item"
+          v-for="item in productList"
+          :key="item._id"
+        >
+          <img class="products__item__img" :src="item.imgUrl" />
+          <div class="products__item__detail">
+            <h4 class="products__item__title">{{ item.name }}</h4>
+            <p class="products__item__price">
+              <span>
+                <span class="products__item__yen">&yen;</span>
+                {{ item.price }} × {{ item.count }}
+              </span>
+              <span class="products__item__totalprice">
+                <span class="products__item__yen">&yen;</span>
+                {{ item.price * item.count }}
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { useCommonCartEffect } from '../../effects/cartEffects'
+import { useRoute } from 'vue-router'
+
 export default {
   name: 'OrderConfirmation',
   setup () {
+    const route = useRoute()
+    const shopId = route.params.id
+    const { shopName, productList } = useCommonCartEffect(shopId)
+    return { shopName, productList }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 @import '../../style/variables.scss';
+@import '../../style/mixins.scss';
 .wrapper {
   position: absolute;
-  left:0;
-  top:0;
+  left: 0;
+  top: 0;
   bottom: 0;
-  right:0;
+  right: 0;
   background-color: #EEE;
 }
+
 .top {
   position: relative;
   height: 1.96rem;
   background-size: 100% 1.59rem;
-  background-image: linear-gradient(0deg, rgba(0,145,255,0.00) 4%, #0091FF 50%);
+  background-image: linear-gradient(0deg, rgba(0, 145, 255, 0.00) 4%, #0091FF 50%);
   background-repeat: no-repeat;
 
   &__header {
@@ -99,6 +135,58 @@ export default {
       top: .5rem;
       color: #666;
       font-size: .2rem;
+    }
+  }
+}
+
+.products {
+  margin: .16rem .18rem .55rem .18rem;
+  background: #FFF;
+
+  &__title {
+    padding: .16rem .16rem 0 .16rem;
+    font-size: .16rem;
+    color: #333;
+  }
+
+  &__item {
+    position: relative;
+    display: flex;
+    padding: .16rem;
+
+    &__img {
+      width: .46rem;
+      height: .46rem;
+      margin-right: .16rem;
+    }
+
+    &__detail {
+      overflow: hidden;
+      flex: 1;
+    }
+    &__title {
+      line-height: .2rem;
+      font-size: .14rem;
+      margin: 0;
+      color: $content-fontcolor;
+      @include ellipsis;
+    }
+
+    &__price {
+      display: flex;
+      margin: .06rem 0 0 0;
+      line-height: .2rem;
+      font-size: .14rem;
+      color: $highlight-fontcolor;
+    }
+
+    &__totalprice {
+      flex: 1;
+      text-align: right;
+      color: #000;
+    }
+    &__yen {
+      font-size: .12rem;
     }
   }
 }
