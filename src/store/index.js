@@ -7,7 +7,12 @@ const setLocalCartList = (state) => {
 }
 
 const getLocalCartList = () => {
-  return JSON.parse(localStorage.cartList) || {}
+  // 用JSON.parse的时候，尽量都用try catch，因为很难保证拿到的数据是标准的JSON字符串（可能undefined）
+  try {
+    return JSON.parse(localStorage.cartList)
+  } catch (e) {
+    return {}
+  }
 }
 
 export default createStore({
@@ -84,6 +89,10 @@ export default createStore({
       shopInfo.shopName = shopName
       state.cartList[shopId] = shopInfo
       setLocalCartList(state)
+    },
+
+    clearCartData (state, shopId) {
+      state.cartList[shopId].productList = {}
     }
   },
   actions: {
