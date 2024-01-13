@@ -1,9 +1,9 @@
 <template>
   <div class="order">
     <div class="order__price">实付金额 <b>￥{{ calculations.price }}</b></div>
-    <div class="order__btn" @click="() => handleSubmitClick(true)">提交订单</div>
+    <div class="order__btn" @click="() => handleShowConfirmChange(true)">提交订单</div>
   </div>
-  <div class="mask" v-show="showConfirm" @click="() => handleSubmitClick(false)">
+  <div class="mask" v-show="showConfirm" @click="() => handleShowConfirmChange(false)">
     <div class="mask__content" @click.stop>
       <h3 class="mask__content__title">确认离开收银台？</h3>
       <p class="mask__content__desc">请尽快完成支付，否则将被取消</p>
@@ -28,45 +28,55 @@ import { useStore } from 'vuex'
 import { useCommonCartEffect } from '../../effects/cartEffects'
 import { post } from '../../utils/request'
 
+// 下单相关逻辑
+const useMakeOrderEffect = (productList, shopName, shopId) => {
+  const router = useRouter()
+  const store = useStore()
+
+  const handleConfirmOrder = async (isCanceled) => {
+    const products = []
+    for (const i in productList.value) {
+      const product = productList.value[i]
+      products.push({ id: parseInt(product._id, 10), num: product.count })
+    }
+    try {
+      const result = await post('/api/order', {
+        addressId: 1,
+        shopId,
+        shopName: shopName.value,
+        isCanceled,
+        products
+      })
+      if (result?.errno === 0) {
+        store.commit('clearCartData', shopId)
+        router.push({ name: 'OrderList' })
+      }
+    } catch (e) {
+      // 提示失败
+    }
+  }
+  return { handleConfirmOrder }
+}
+
+// 蒙层展示相关（点击“去结算”）
+const useShowMaskEffect = () => {
+  const showConfirm = ref(false)
+  const handleShowConfirmChange = (states) => {
+    showConfirm.value = states
+  }
+  return { showConfirm, handleShowConfirmChange }
+}
+
 export default {
   name: 'OrderView',
   setup () {
     const route = useRoute()
-    const router = useRouter()
-    const store = useStore()
-
-    const showConfirm = ref(false)
-
     const shopId = parseInt(route.params.id, 10)
     const { calculations, shopName, productList } = useCommonCartEffect(shopId)
-    const handleSubmitClick = (states) => {
-      showConfirm.value = states
-    }
-    const handleConfirmOrder = async (isCanceled) => {
-      const products = []
-      for (const i in productList.value) {
-        const product = productList.value[i]
-        products.push({ id: parseInt(product._id, 10), num: product.count })
-      }
-      console.log(products)
-      try {
-        const result = await post('/api/order', {
-          addressId: 1,
-          shopId,
-          shopName: shopName.value,
-          isCanceled,
-          products
-        })
-        console.log(result)
-        if (result?.errno === 0) {
-          store.commit('clearCartData', shopId)
-          router.push({ name: 'HomeView' })
-        }
-      } catch (e) {
-        // 提示失败
-      }
-    }
-    return { showConfirm, calculations, handleConfirmOrder, handleSubmitClick }
+    const { handleConfirmOrder } = useMakeOrderEffect(productList, shopName, shopId)
+    const { showConfirm, handleShowConfirmChange } = useShowMaskEffect()
+
+    return { showConfirm, calculations, handleConfirmOrder, handleShowConfirmChange }
   }
 }
 </script>

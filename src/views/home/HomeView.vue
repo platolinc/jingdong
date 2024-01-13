@@ -3,13 +3,13 @@
     <StaticPart></StaticPart>
     <NearBy></NearBy>
   </div>
-  <DockerView></DockerView>
+  <DockerView :currentIndex="0"></DockerView>
 </template>
 
 <script>
 import StaticPart from './StaticPart.vue'
 import NearBy from './NearBy.vue'
-import DockerView from './DockerView.vue'
+import DockerView from '../../components/DockerView.vue'
 export default {
   name: 'HomeView',
   components: { StaticPart, NearBy, DockerView }
