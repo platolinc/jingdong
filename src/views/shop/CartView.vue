@@ -151,7 +151,7 @@ export default {
   &__header {
     display: flex;
     line-height: .52rem;
-    border-bottom: 1px solid $content-bgColor;
+    border-bottom: .01rem solid $content-bgColor;
     font-size: .14rem;
     color: $content-fontcolor;
 
@@ -167,8 +167,11 @@ export default {
     }
 
     &__clear {
-      margin-left: 1.91rem;
+      flex: 1;
+      margin-right: .16rem;
       text-align: right;
+      font-size: .14rem;
+      color: #333;
     }
   }
 

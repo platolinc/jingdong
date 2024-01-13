@@ -40,7 +40,7 @@ export default {
 
   &__header {
     position: relative;
-    padding-top: .26rem;
+    padding-top: .2rem;
     line-height: .24rem;
     color: #FFF;
     text-align: center;
@@ -60,7 +60,7 @@ export default {
     bottom: 0;
     height: 1.11rem;
     background: #FFF;
-    border-radius: 4px;
+    border-radius: .04rem;
 
     &__title {
       line-height: .22rem;
